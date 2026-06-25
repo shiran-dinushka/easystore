@@ -1,9 +1,7 @@
 package com.easybytes.easystore.service.impl;
 
 import com.easybytes.easystore.dto.ContactRequestDto;
-import com.easybytes.easystore.dto.ProductDto;
 import com.easybytes.easystore.entity.Contact;
-import com.easybytes.easystore.entity.Product;
 import com.easybytes.easystore.repository.ContactRepository;
 import com.easybytes.easystore.service.IContactService;
 import lombok.RequiredArgsConstructor;
