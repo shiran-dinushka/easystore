@@ -3,6 +3,8 @@ package com.easybytes.easystore.controller;
 import com.easybytes.easystore.dto.ContactRequestDto;
 import com.easybytes.easystore.service.IContactService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -14,12 +16,8 @@ public class ContactController {
     private final IContactService iContactService;
 
     @PostMapping
-    public String saveContact(@RequestBody ContactRequestDto contactRequestDto) {
-        boolean isSaved = iContactService.saveContact(contactRequestDto);
-        if(isSaved){
-            return "Request processed successfully";
-        }else{
-            return "An error occurred. Please try again or contact Dev team";
-        }
+    public ResponseEntity<String>  saveContact(@RequestBody ContactRequestDto contactRequestDto) {
+       iContactService.saveContact(contactRequestDto);
+       return ResponseEntity.status(HttpStatus.CREATED).body( "Request processed successfully");
     }
 }
