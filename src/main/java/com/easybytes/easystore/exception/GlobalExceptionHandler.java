@@ -1,6 +1,8 @@
 package com.easybytes.easystore.exception;
 
 import com.easybytes.easystore.dto.ErrorResponseDto;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @RestControllerAdvice
@@ -33,6 +36,18 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         List<FieldError> fieldErrorList = exception.getBindingResult().getFieldErrors();
         fieldErrorList.forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, String>> handleConstraintViolationException(
+            ConstraintViolationException exception) {
+        log.error("An exception occurred due to : {}", exception.getMessage());
+        Map<String, String> errors = new HashMap<>();
+        Set<ConstraintViolation<?>> constraintViolationSet = exception.getConstraintViolations();
+        constraintViolationSet.forEach(constraintViolation ->
+                errors.put(constraintViolation.getPropertyPath().toString(),
+                        constraintViolation.getMessage()));
         return ResponseEntity.badRequest().body(errors);
     }
 }
